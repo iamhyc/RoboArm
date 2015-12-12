@@ -1,18 +1,20 @@
-#define MOTOR_IN   A1
-#define MOVECMD_IN A3
-#define FIST_IN    A5
-#define AUTO_SW A0
+#define   AUTO_SW     A0
+#define   MOTOR_IN    A1
+#define   MOVECMD_IN  A2
+#define   SERVO_IN    A3
+#define   FIST_IN     A5
 
 #include <JY901.h>
+#include <Wire.h>
 
 const int M1 = 6;  const int E1 = 7;//MOTOR
 const int M2 = 4;  const int E2 = 5;//FLAW
 
-const int SDE = 3; //Standard Derivation ERROR
+const int SDE = 1; //Standard Derivation ERROR
 
 /*DC Motor*/
-int POS_X;
-int DC_POS = 0;
+static int POS_X = 0;
+static int DC_POS = 0;
 /*DC Motor*/
 
 /*Fist*/
@@ -21,15 +23,17 @@ bool FIST_FLAG = true;
 /*Fist*/
 
 /*SERVO Configuration*/
-#include <Servo.h> 
-Servo SERVO1;
-int SERVO_POS = 0;
-bool LAST_SERVO1_FLAG = true;
-bool SERVO1_FLAG = true;
+#include <Servo.h>
+const int SERVOR_OUT = 9;
+Servo SERVOR;
 /*SERVO Configuration*/
 
 
 /**************状态分段***************/
+int _pulseIn(int PIN){
+  return pulseIn(PIN, HIGH, 30000);
+}
+
 int _digiSwitch(int data){
   //950-970, 1490-1510, 2030-2050
   if (data >= 900 && data <= 1000)
@@ -55,30 +59,12 @@ int _analogSwitch(int data){
 
 /***************Servo相关函数*******************/
 void Servo_Reset(){
-  SERVO1.write(0);
-  delay(1000);
+  SERVOR.write(0);
+  delay(200);
 }
 
-void Servo1_Drive(int data){
-  switch(data){
-    case 0://PWDown
-    LAST_SERVO1_FLAG = true;
-    return;
-    break;
-    case 2:
-    if (LAST_SERVO1_FLAG){
-      LAST_SERVO1_FLAG = false;
-      SERVO1_FLAG = !SERVO1_FLAG;
-    }
-    
-    if (SERVO1_FLAG)
-      SERVO1.write(++SERVO_POS);
-    else
-      SERVO1.write(--SERVO_POS);
-    break;
-    default:
-    break;
-  }
+void Servo_Drive(char pos){
+  SERVOR.write(pos);
 }
 /***************Servo相关函数*******************/
 
@@ -107,18 +93,20 @@ void DC_Rotate(int data){
 }
 
 
-
 void DC_SetPos(){
-  //Serial.print(POS_X);
-  //Serial.print("\t");
-  //Serial.println(DC_POS);
+  Serial.print(POS_X);
+  Serial.print("\t");
+  Serial.println(DC_POS);
   if (POS_X - DC_POS > SDE){// SDE == 0
     //Serial.println("DC is ROTATING FOREWARD");
     DC_Rotate(0);
   }
-  if (DC_POS - POS_X> SDE){
+  else if (DC_POS - POS_X> SDE){
     //Serial.println("DC is ROTATING BACKWARD");
     DC_Rotate(2);
+  }
+  else {
+    DC_Rotate(1);
   }
 }
 
@@ -158,10 +146,6 @@ void Hold_Release(){
 #include <Pixy.h>
 Pixy pixy;
 
-typedef{
-  
-}
-
 static int ImgCount = 0;
 
 void readPixy(){
@@ -172,7 +156,7 @@ void readPixy(){
     ImgCount ++;
  
     if (ImgCount % 50 == 0){
-      imgCount = 0;
+      ImgCount = 0;
       for (int i = 0; i<blocks; i++){
         pixy.blocks[i].print();
         //sig: 1 x: 159 y: 109 width: 61 height: 61
@@ -186,41 +170,38 @@ void readPixy(){
 
 /***************信号控制*******************/
 void readControl(){
-  
-  if (_digiSwitch(pulseIn(AUTO_SW, HIGH)) == 0){
-    int motor_data = _analogSwitch(pulseIn(MOTOR_IN, HIGH));  
-    //int servo1_data = _digiSwitch(pulseIn(SERVO1_IN, HIGH));
-    int fist_data = _digiSwitch(pulseIn(FIST_IN, HIGH));
-
-    //Serial.print(motor_data);
-    //Serial.print("\t");
-    //Serial.print(servo1_data);
-    //Serial.print("\t");
-    //Serial.println(fist_data);
+  if (_digiSwitch(_pulseIn(AUTO_SW)) != 2){//手动模式
+    int motor_data = _analogSwitch(_pulseIn(MOTOR_IN));
+    int servo_data = _pulseIn(SERVO_IN);
+        servo_data = map(servo_data, 990, 2020, 0, 180);
+    int fist_data = _digiSwitch(_pulseIn(FIST_IN));
   
     DC_Rotate(motor_data);
-    //Servo1_Drive(servo1_data);
+    Servo_Drive(servo_data);
     Fist_StatusChange(fist_data);
   }
-  else{
-    int val = pulseIn(MOTOR_IN, HIGH);
-    DC_POS = map(val, 990, 2020, 0, 90);
-    //Serial.print("1pos: "+ DC_POS);
-    //int servo1_data = _digiSwitch(pulseIn(SERVO1_IN, HIGH));
-    int fist_data = _digiSwitch(pulseIn(FIST_IN, HIGH));
-    int move_cmd = _digiSwitch(pulseIn(MOVECMD_IN, HIGH));
+  else{//自动模式
+    int val = _pulseIn(MOTOR_IN);
+        DC_POS = map(val, 990, 2020, -30, 30);
+    int servo_data = _pulseIn(SERVO_IN);
+        servo_data = map(servo_data, 990, 2020, 0, 180);
 
+    int fist_data = _digiSwitch(_pulseIn(FIST_IN));
+    int move_cmd = _digiSwitch(_pulseIn(MOVECMD_IN));
+
+    //if (_digiSwitch(_pulseIn(MOVECMD_IN)) == 1){
     if (1){
-      DC_SetPos();
+        DC_SetPos();
     }
-    //Servo1_Drive(servo1_data);
+
+    Servo_Drive(servo_data);
     Fist_StatusChange(fist_data);
   }
 }
 
 void serialEvent(){
-  while(Serial1.available()){
-    JY901.CopeSerialData(Serial1.read());
+  while(Serial.available()){
+    JY901.CopeSerialData(Serial.read());
   }
 }
 /***************信号控制*******************/
@@ -228,13 +209,12 @@ void serialEvent(){
 void setup() {
   pinMode(E1, OUTPUT);  pinMode(M1, OUTPUT);
   pinMode(E2, OUTPUT);  pinMode(M2, OUTPUT);
-
   Serial.begin(9600);
-  Serial1.begin(9600);
-  //SERVO1.attach(SERVO1_OUT);
-  //Servo_Reset();
+  SERVOR.attach(SERVOR_OUT);
+  
+  Servo_Reset();
   Hold_Tight();
-  delay(500);
+  delay(300);
 }
 
 void loop() {
