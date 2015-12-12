@@ -1,4 +1,5 @@
 #include "RoboArm.h"
+#include "PixyModule.h"
 #include <JY901.h>
 #include <Wire.h>
 
@@ -143,19 +144,20 @@ void readPixy(){
   uint16_t blocks;
   
   blocks = pixy.getBlocks();
-  if (blocks){
-    ImgCount ++;
- 
-    if (ImgCount % 50 == 0){
-      ImgCount = 0;
-      for (int i = 0; i<blocks; i++){
-        pixy.blocks[i].print();
-        //sig: 1 x: 159 y: 109 width: 61 height: 61
-        //pixy.blocks[i].signature, pixy.blocks[i].x, pixy.blocks[i].y, 
-        //pixy.blocks[i].width, pixy.blocks[i].height
-      }
-    }
+  if (blocks)
+  {
+      ImgCount ++;
 
+      if (ImgCount % 50 == 0){
+        ImgCount = 0;
+        //copeBlocks();
+        /*for (int i = 0; i<blocks; i++){
+          pixy.blocks[i].print();
+          //sig: 1 x: 159 y: 109 width: 61 height: 61
+          //pixy.blocks[i].signature, pixy.blocks[i].x, pixy.blocks[i].y, 
+          //pixy.blocks[i].width, pixy.blocks[i].height
+        }*/
+      }
   }
 }
 /***************Pixy Module****************/
@@ -163,16 +165,6 @@ void readPixy(){
 /***************信号控制*******************/
 void readControl(){
   if (_digiSwitch(_pulseIn(AUTO_SW)) != 2){//手动模式
-    int motor_data = _analogSwitch(_pulseIn(MOTOR_IN));
-    int servo_data = _pulseIn(SERVO_IN);
-        servo_data = map(servo_data, 990, 2020, 0, 180);
-    int fist_data = _digiSwitch(_pulseIn(FIST_IN));
-  
-    DC_Rotate(motor_data);
-    Servo_Drive(servo_data);
-    Fist_StatusChange(fist_data);
-  }
-  else{//自动模式
     int val = _pulseIn(MOTOR_IN);
         DC_POS = map(val, 990, 2020, -30, 30);
     int servo_data = _pulseIn(SERVO_IN);
@@ -188,6 +180,17 @@ void readControl(){
 
     Servo_Drive(servo_data);
     Fist_StatusChange(fist_data);
+  }
+  else{//自动模式
+    Arm_Ctrl_t data = getControInfo();
+
+    DC_POS = data.DC_DATA;
+    //if (_digiSwitch(_pulseIn(MOVECMD_IN)) == 1){
+    if (1){
+        DC_SetPos();
+    }
+    Servo_Drive(data.SERVO_DATA);
+    Fist_StatusChange(data.FIST_DATA);
   }
 }
 
@@ -214,3 +217,17 @@ void loop() {
   readPixy();
   readControl();
 }
+
+
+/*Abandoned Code
+
+int motor_data = _analogSwitch(_pulseIn(MOTOR_IN));
+    int servo_data = _pulseIn(SERVO_IN);
+        servo_data = map(servo_data, 990, 2020, 0, 180);
+    int fist_data = _digiSwitch(_pulseIn(FIST_IN));
+  
+    DC_Rotate(motor_data);
+    Servo_Drive(servo_data);
+    Fist_StatusChange(fist_data);
+
+*/

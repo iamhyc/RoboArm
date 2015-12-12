@@ -1,8 +1,17 @@
+#ifndef _RoboArm_H_             //如果没有定义宏_MY_HEAD_H_
+#define _RoboArm_H_             //则，定义该宏名
+
+//以下是被保护的代码区
+//进行相应的全局变量和结构体类型定义
 #define   AUTO_SW     A0
 #define   MOTOR_IN    A1
 #define   MOVECMD_IN  A2
 #define   SERVO_IN    A3
 #define   FIST_IN     A5
+
+#endif  
+
+
 
 
 /**************状态分段***************/
