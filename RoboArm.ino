@@ -1,9 +1,4 @@
-#define   AUTO_SW     A0
-#define   MOTOR_IN    A1
-#define   MOVECMD_IN  A2
-#define   SERVO_IN    A3
-#define   FIST_IN     A5
-
+#include "RoboArm.h"
 #include <JY901.h>
 #include <Wire.h>
 
@@ -17,10 +12,6 @@ static int POS_X = 0;
 static int DC_POS = 0;
 /*DC Motor*/
 
-/*Fist*/
-bool LAST_FIST_FLAG = true;
-bool FIST_FLAG = true;
-/*Fist*/
 
 /*SERVO Configuration*/
 #include <Servo.h>
@@ -160,7 +151,8 @@ void readPixy(){
       for (int i = 0; i<blocks; i++){
         pixy.blocks[i].print();
         //sig: 1 x: 159 y: 109 width: 61 height: 61
-        //pixy.blocks[i].signature, pixy.blocks[i].x, pixy.blocks[i].y, pixy.blocks[i].width, pixy.blocks[i].height
+        //pixy.blocks[i].signature, pixy.blocks[i].x, pixy.blocks[i].y, 
+        //pixy.blocks[i].width, pixy.blocks[i].height
       }
     }
 
