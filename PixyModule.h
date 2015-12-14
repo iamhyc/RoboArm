@@ -20,5 +20,4 @@ typedef struct
 
 #endif  
 
-
 Arm_Ctrl_t getControInfo(void);

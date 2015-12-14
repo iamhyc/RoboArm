@@ -18,6 +18,7 @@ static int DC_POS = 0;
 #include <Servo.h>
 const int SERVOR_OUT = 9;
 Servo SERVOR;
+static int Servor_Pos;
 /*SERVO Configuration*/
 
 
@@ -189,7 +190,7 @@ void readControl(){
     int val = _pulseIn(MOTOR_IN);
         DC_POS = map(val, 990, 2020, -30, 30);
     int servo_data = _pulseIn(SERVO_IN);
-        servo_data = map(servo_data, 990, 2020, 0, 180);
+        Servor_Pos = map(servo_data, 990, 2020, 0, 180);
 
     int fist_data = _digiSwitch(_pulseIn(FIST_IN));
     int move_cmd = _digiSwitch(_pulseIn(MOVECMD_IN));
@@ -199,7 +200,7 @@ void readControl(){
         DC_SetPos();
     }
 
-    Servo_Drive(servo_data);
+    Servo_Drive(Servor_Pos);
     Fist_StatusChange(fist_data);
   }
   else{//自动模式
