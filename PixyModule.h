@@ -5,10 +5,18 @@
 //进行相应的全局变量和结构体类型定义
 typedef struct
 {
-	int DC_DATA;
-	int SERVO_DATA;
-	int FIST_DATA;
+	short DC_DATA;
+	short SERVO_DATA;
+	short FIST_DATA;
 }Arm_Ctrl_t;
+
+typedef struct
+{
+	short x;
+	short y;
+	short width;
+	short height;
+}block_t;
 
 #endif  
 

@@ -1,5 +1,5 @@
-#include "RoboArm.h"
 #include "PixyModule.h"
+#include "RoboArm.h"
 #include <JY901.h>
 #include <Wire.h>
 
@@ -134,7 +134,7 @@ void Hold_Release(){
 /***************爪子相关*******************/
 
 /***************Pixy Moudle****************/
-#include <SPI.h>  
+#include <SPI.h>
 #include <Pixy.h>
 Pixy pixy;
 
@@ -150,7 +150,7 @@ void readPixy(){
 
       if (ImgCount % 50 == 0){
         ImgCount = 0;
-        //copeBlocks();
+        copeBlocks(blocks);
         /*for (int i = 0; i<blocks; i++){
           pixy.blocks[i].print();
           //sig: 1 x: 159 y: 109 width: 61 height: 61
@@ -159,6 +159,27 @@ void readPixy(){
         }*/
       }
   }
+}
+
+int ImgFilter(int sig, int blocks, block_t *arr){
+  int len = 10;
+  int count = 0;
+  arr = (block_t *)malloc(len * sizeof(block_t));
+  block_t *pt = arr;
+
+  for (int i = 0; i < blocks; i++){
+    if (sig == pixy.blocks[i].signature){
+      if (pt == arr + len * sizeof(block_t)){
+        arr = (block_t *)realloc(arr, (len+10) * sizeof(block_t));
+        pt = arr + len * sizeof(block_t);
+        len += 10;
+      }
+      block_t tmp = {pixy.blocks[i].x, pixy.blocks[i].y, pixy.blocks[i].width, pixy.blocks[i].height};
+      *pt = tmp;
+      pt++;count++;
+    }
+  }
+  return count;
 }
 /***************Pixy Module****************/
 
@@ -208,7 +229,7 @@ void setup() {
   SERVOR.attach(SERVOR_OUT);
   
   Servo_Reset();
-  Hold_Tight();
+  Hold_Release();
   delay(300);
 }
 
