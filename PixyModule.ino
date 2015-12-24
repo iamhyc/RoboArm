@@ -47,14 +47,14 @@ bool isImageSame(block_t t1, block_t t2){
 		return false;
 }
 
-bool isCover(){
+bool isCover(int blocks){
 	filter_back = ImgFilter(2, blocks, arr);
 	bool flag1 = (couplingRate(F1, target)>IMG_CPT)&&(couplingRate(F2, target)>IMG_CPT);
 	bool flag2 = false;
 	if(filter_back >= 2){
-		flag2 = (couplingRate(F1, arr[0])>IMG_CPF)&&(couplingRate(F2, arr[1])>IMG_CPT)
+		flag2 = (couplingRate(F1, arr[0])>IMG_CPF)&&(couplingRate(F2, arr[1])>IMG_CPT);
 	}
-	return (flag1 && flag2)
+	return (flag1 && flag2);
 }
 
 block_t Img_Average(block_t t1, block_t t2){
@@ -70,7 +70,7 @@ void FeedBack(){
 }
 
 Arm_Ctrl_t getControInfo(){
-	Arm_Ctrl_t data
+	Arm_Ctrl_t data;
 	if(targetLock)
 		data = {DC_DATA, SERVO_DATA, FIST_DATA};
 	else
@@ -137,7 +137,7 @@ void copeBlocks(int blocks){//Main Function
 				status = 2;
 				targetLock = false;
 			}
-			if (isCover){
+			if (isCover(blocks)){
 				status = 3;
 				FIST_DATA = 0;
 			}

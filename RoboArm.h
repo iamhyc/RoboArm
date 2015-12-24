@@ -6,7 +6,8 @@
 #define   AUTO_SW     A0
 #define   MOTOR_IN    A1
 #define   MOVECMD_IN  A2
-#define   SERVO_IN    A3
+#define   SERVOR_0_IN  A3//POS_Z
+#define	  SERVOR_1_IN  A4//POS_Y
 #define   FIST_IN     A5
 
 #endif  
@@ -22,14 +23,14 @@ int _analogSwitch(int);
 
 
 /*************Servo相关函数***********/
-void Servo_Reset(void);
-void Servo_Drive(char);
+void Servo_Reset(void);//初始化两个舵机
+void Servo_Drive(char, char);//(char ServoSelect, char data);
 /*************Servo相关函数***********/
 
 
 /************直流电机相关*************/
 void DC_Rotate(int);
-void DC_SetPos(void);
+void DC_SetPosX(void);
 /************直流电机相关*************/
 
 
