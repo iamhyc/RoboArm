@@ -12,8 +12,8 @@ typedef struct
 	short ENPin;
 }AWHEEL;
 
-AWHEEL L_wheel = {22, 11};
-AWHEEL R_wheel = {24, 12};
+AWHEEL L_wheel = {22, 23, 11};
+AWHEEL R_wheel = {24, 25, 12};
 
 //LEFT
 static int LEFT_times = 0;
