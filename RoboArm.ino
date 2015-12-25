@@ -1,4 +1,5 @@
 #include "PixyModule.h"
+#include "Cart.h"
 #include "RoboArm.h"
 #include <Servo.h>
 #include <JY901.h>
@@ -16,7 +17,7 @@ static int X_times = 0;
 static int X_avg[10] = {1500,1500,1500,1500,1500,1500,1500,1500,1500,1500};
 
 static int POS_Y = 0;//Servo_1 POS
-static int Y_times;
+static int Y_times = 0;
 static int Y_avg[10] = {1500,1500,1500,1500,1500,1500,1500,1500,1500,1500};
 
 static int POS_Z = 0;//Servo_0 POS
@@ -79,18 +80,18 @@ int _analogSwitch(int data){
 
 /***************信号控制*******************/
 void readControl(){
-  int ctrl_sig = _digiSwitch(_pulseIn(AUTO_SW);
+  int ctrl_sig = _digiSwitch(_pulseIn(AUTO_SW));
 
   switch(ctrl_sig){
 
     case 0://自动模式
-      Arm_Ctrl_t data = getControInfo();
+      //Arm_Ctrl_t data = getControInfo();
 
-      POS_X = data.DC_DATA;
+      //POS_X = data.DC_DATA;
       //if (_digiSwitch(_pulseIn(MOVECMD_IN)) == 1){
       DC_SetPosX();
-      Servo_Drive(0, data.SERVO_DATA);
-      Fist_StatusChange(data.FIST_DATA);
+      //Servo_Drive(0, data.SERVO_DATA);
+      //Fist_StatusChange(data.FIST_DATA);
     break;
     
     case 2:
@@ -98,7 +99,7 @@ void readControl(){
     break;
 
     case 1:
-    default://手动模式
+    //手动模式
       {
         X_times = (X_times+1)%10;
         X_avg[X_times] = _pulseIn(MOTOR_IN);

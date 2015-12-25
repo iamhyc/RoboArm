@@ -21,7 +21,7 @@ static block_t F1, F2;//两个分开的爪子
 static block_t target;
 	//图像消抖
 	static block_t *arr;
-  	static int filter_back;
+  static int filter_back;
 	static char try_times = 0;
 
 static int fist_point_x;

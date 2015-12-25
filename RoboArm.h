@@ -10,9 +10,6 @@
 #define	  SERVOR_1_IN  A4//POS_Y
 #define   FIST_IN     A5
 
-#endif  
-
-
 
 
 /**************状态分段***************/
@@ -44,3 +41,5 @@ void Hold_Release(void);
 /*************Pixy主体****************/
 int ImgFilter(int, int, block_t);
 /*************Pixy主体****************/
+
+#endif

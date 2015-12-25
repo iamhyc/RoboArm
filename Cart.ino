@@ -1,16 +1,10 @@
+#include "Cart.h"
 #include "RoboArm.h"
 
-
-//
 const int LEFT_Ctrl = A1;
 const int RIGHT_Ctrl = A3;
 /********************DATA AREA**********************/
-typedef struct
-{
-	short pPin;
-	short nPin;
-	short ENPin;
-}AWHEEL;
+
 
 AWHEEL L_wheel = {22, 23, 11};
 AWHEEL R_wheel = {24, 25, 12};
@@ -20,11 +14,11 @@ static int LEFT_times = 0;
 static int LEFT_avg[10] = {1500,1500,1500,1500,1500,1500,1500,1500,1500,1500};
 
 //RIGHT
-static int RIGHT_times;
+static int RIGHT_times = 0;
 static int RIGHT_avg[10] = {1500,1500,1500,1500,1500,1500,1500,1500,1500,1500};
 /********************DATA AREA**********************/
 
-void WheelDrive(AWHEEL *wheel, int val){
+void WheelDrive(AWHEEL wheel, int val){
 	if (val > 0){//正向转动
 		digitalWrite(wheel.pPin, HIGH);
 		digitalWrite(wheel.nPin, LOW);
