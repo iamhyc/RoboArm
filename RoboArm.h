@@ -4,7 +4,7 @@
 //以下是被保护的代码区
 //进行相应的全局变量和结构体类型定义
 #define   AUTO_SW     A0
-#define   MOTOR_IN    A1
+#define   MOTOR_IN    A1//POS_X
 #define   MOVECMD_IN  A2
 #define   SERVOR_0_IN  A3//POS_Z
 #define	  SERVOR_1_IN  A4//POS_Y

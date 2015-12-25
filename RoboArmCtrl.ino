@@ -48,14 +48,24 @@ void DC_Rotate(int data){
   
 }
 
+void DC_pwmForward(){
+  float diff = read_POS_X - POS_X;
+  int pwm = 255*(diff/10);
+  if (pwm > 255) pwm = 255;
+  digitalWrite(E1, HIGH);
+  analogWrite(M1, pwm);
+}
+
 
 void DC_SetPosX(){
   Serial.print(read_POS_X);
   Serial.print("\t");
   Serial.println(POS_X);
+  //if (read_POS_X == 0) return;
   if (read_POS_X - POS_X > SDE){// SDE == 0
     //Serial.println("DC is ROTATING FOREWARD");
-    DC_Rotate(0);
+    //DC_Rotate(0);
+    DC_pwmForward();
   }
   else if (POS_X - read_POS_X> SDE){
     //Serial.println("DC is ROTATING BACKWARD");

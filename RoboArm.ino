@@ -8,7 +8,7 @@
 const int M1 = 6;  const int E1 = 7;//MOTOR
 const int M2 = 4;  const int E2 = 5;//FLAW
 
-const int SDE = 3; //Standard Derivation ERROR
+const float SDE = 1; //Standard Derivation ERROR
 
 /******POS STATUS******/
 static int POS_X = 0;//DC Motor POS
@@ -25,7 +25,7 @@ static int Z_avg[10] = {1500,1500,1500,1500,1500,1500,1500,1500,1500,1500};
 /******POS STATUS******/
 
 /*******DC Motor*******/
-static int read_POS_X = 0;
+static float read_POS_X = 0;
 static int DC_STATUS = 1;
 static int FT_STATUS = 1;
 /*******DC Motor*******/
@@ -51,7 +51,7 @@ int sum10(int *arr){
 }
 
 int _pulseIn(int PIN){
-  return pulseIn(PIN, HIGH, 30000);
+  return pulseIn(PIN, HIGH, 35000);
 }
 
 int _digiSwitch(int data){
@@ -68,7 +68,7 @@ int _digiSwitch(int data){
 int _analogSwitch(int data){
   if (data < 1400)
     return 0;
-  else if (data >= 1400 && data <= 1600)
+  else if (data >= 1400 && data <= 1500)
     return 1;
   else if (data >1600)
     return 2;
@@ -79,44 +79,51 @@ int _analogSwitch(int data){
 
 /***************信号控制*******************/
 void readControl(){
-  //if (_digiSwitch(_pulseIn(AUTO_SW)) != 2){//手动模式
-  if(1){
+  int ctrl_sig = _digiSwitch(_pulseIn(AUTO_SW);
 
-    {
-      X_times = (X_times+1)%10;
-      X_avg[X_times] = _pulseIn(MOTOR_IN);
-      POS_X = map(sum10(X_avg), 990, 2020, -30, 30);
+  switch(ctrl_sig){
+
+    case 0://自动模式
+      Arm_Ctrl_t data = getControInfo();
+
+      POS_X = data.DC_DATA;
+      //if (_digiSwitch(_pulseIn(MOVECMD_IN)) == 1){
+      DC_SetPosX();
+      Servo_Drive(0, data.SERVO_DATA);
+      Fist_StatusChange(data.FIST_DATA);
+    break;
+    
+    case 2:
+      MotorControl();
+    break;
+
+    case 1:
+    default://手动模式
+      {
+        X_times = (X_times+1)%10;
+        X_avg[X_times] = _pulseIn(MOTOR_IN);
+        POS_X = map(sum10(X_avg), 990, 2020, -30, 30);
       }
-    {
-      Y_times = (Y_times+1)%10;
-      Y_avg[Y_times] = _pulseIn(SERVOR_1_IN);
-      POS_Y = map(sum10(Y_avg), 990, 2020, 0, 180);
+      {
+        Y_times = (Y_times+1)%10;
+        Y_avg[Y_times] = _pulseIn(SERVOR_1_IN);
+        POS_Y = map(sum10(Y_avg), 990, 2020, 0, 180);
       }
-    {
-      Z_times = (Z_times+1)%10;
-      Z_avg[Z_times] = _pulseIn(SERVOR_0_IN);
-      POS_Z = map(sum10(Z_avg), 990, 2020, 0, 180);
+      {
+        Z_times = (Z_times+1)%10;
+        Z_avg[Z_times] = _pulseIn(SERVOR_0_IN);
+        POS_Z = map(sum10(Z_avg), 990, 2020, 0, 180);
       }
 
-    int fist_data = _digiSwitch(_pulseIn(FIST_IN));
-    int move_cmd = _digiSwitch(_pulseIn(MOVECMD_IN));
+      int fist_data = _digiSwitch(_pulseIn(FIST_IN));
+      int move_cmd = _digiSwitch(_pulseIn(MOVECMD_IN));
 
-    //if (_digiSwitch(_pulseIn(MOVECMD_IN)) == 1){
-    DC_SetPosX();
-    Servo_Drive(1, POS_Y);
-    Servo_Drive(0, POS_Z);
-    Fist_StatusChange(fist_data);
-  }
-  else{//自动模式
-    Arm_Ctrl_t data = getControInfo();
-
-    POS_X = data.DC_DATA;
-    //if (_digiSwitch(_pulseIn(MOVECMD_IN)) == 1){
-    if (1){
-        DC_SetPosX();
-    }
-    Servo_Drive(0, data.SERVO_DATA);
-    Fist_StatusChange(data.FIST_DATA);
+      //if (_digiSwitch(_pulseIn(MOVECMD_IN)) == 1){
+      DC_SetPosX();
+      Servo_Drive(1, POS_Y);
+      Servo_Drive(0, POS_Z);
+      Fist_StatusChange(fist_data);
+    break;
   }
 }
 /***************信号控制*******************/
@@ -186,12 +193,13 @@ void setup() {
   Serial.begin(9600);
   
   Servo_Reset();
-  Hold_Release();
+  Fist_StatusChange(2);
   delay(800);
+  Fist_StatusChange(1);
 }
 
 void loop() {
-  read_POS_X = (int)((float)JY901.stcAngle.Angle[0]/32768*180);
+  read_POS_X = ((float)JY901.stcAngle.Angle[0]/32768*180);
   readPixy();
   readControl();
 }
