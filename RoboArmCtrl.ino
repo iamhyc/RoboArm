@@ -60,12 +60,19 @@ void DC_pwmForward(){
 void DC_SetPosX(){
   Serial.print(read_POS_X);
   Serial.print("\t");
+
+
+
+
+
+
+  
   Serial.println(POS_X);
-  //if (read_POS_X == 0) return;
+  if (read_POS_X == 0) return;
   if (read_POS_X - POS_X > SDE){// SDE == 0
     //Serial.println("DC is ROTATING FOREWARD");
-    //DC_Rotate(0);
-    DC_pwmForward();
+    DC_Rotate(0);
+    //DC_pwmForward();
   }
   else if (POS_X - read_POS_X> SDE){
     //Serial.println("DC is ROTATING BACKWARD");

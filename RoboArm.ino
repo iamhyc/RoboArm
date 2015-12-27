@@ -82,22 +82,24 @@ int _analogSwitch(int data){
 void readControl(){
   int ctrl_sig = _digiSwitch(_pulseIn(AUTO_SW));
 
+  Serial.println(ctrl_sig);
+  
   switch(ctrl_sig){
-
-    case 0://自动模式
+    //case 0://自动模式
       //Arm_Ctrl_t data = getControInfo();
-
+      MotorControl();
       //POS_X = data.DC_DATA;
       //if (_digiSwitch(_pulseIn(MOVECMD_IN)) == 1){
-      DC_SetPosX();
+      //DC_SetPosX();
       //Servo_Drive(0, data.SERVO_DATA);
       //Fist_StatusChange(data.FIST_DATA);
-    break;
+    //break;
     
+    //case 2:
+      //MotorControl();
+    //break;
+    case 0:
     case 2:
-      MotorControl();
-    break;
-
     case 1:
     //手动模式
       {
@@ -118,8 +120,9 @@ void readControl(){
 
       int fist_data = _digiSwitch(_pulseIn(FIST_IN));
       int move_cmd = _digiSwitch(_pulseIn(MOVECMD_IN));
-
+      
       //if (_digiSwitch(_pulseIn(MOVECMD_IN)) == 1){
+      Serial.println("hehe");
       DC_SetPosX();
       Servo_Drive(1, POS_Y);
       Servo_Drive(0, POS_Z);
@@ -189,9 +192,14 @@ void serialEvent(){
 void setup() {
   pinMode(E1, OUTPUT);  pinMode(M1, OUTPUT);
   pinMode(E2, OUTPUT);  pinMode(M2, OUTPUT);
+  
   SERVOR_0.attach(SERVOR_0_OUT);
   SERVOR_1.attach(SERVOR_1_OUT);
   Serial.begin(9600);
+
+  pinMode(13, OUTPUT);
+
+  Serial.println("HEHEHE");
   
   Servo_Reset();
   Fist_StatusChange(2);
@@ -202,7 +210,11 @@ void setup() {
 void loop() {
   read_POS_X = ((float)JY901.stcAngle.Angle[0]/32768*180);
   readPixy();
+  Serial.println("HAHA");
   readControl();
+  digitalWrite(13, HIGH);
+  delay(500);
+  digitalWrite(13, LOW);
 }
 
 

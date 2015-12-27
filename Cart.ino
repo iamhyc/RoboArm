@@ -1,4 +1,4 @@
-#include "Cart.h"
+ #include "Cart.h"
 #include "RoboArm.h"
 
 const int LEFT_Ctrl = A1;
@@ -6,8 +6,8 @@ const int RIGHT_Ctrl = A3;
 /********************DATA AREA**********************/
 
 
-AWHEEL L_wheel = {22, 23, 11};
-AWHEEL R_wheel = {24, 25, 12};
+AWHEEL L_wheel = {22, 23, 2};
+AWHEEL R_wheel = {24, 25, 3};
 
 //LEFT
 static int LEFT_times = 0;
@@ -38,14 +38,14 @@ void MotorControl(){//Main
 	int val = 0;
 	{
         LEFT_times = (LEFT_times+1)%10;
-        LEFT_avg[LEFT_times] = _pulseIn(LEFT_Ctrl);
+        LEFT_avg[LEFT_times] = 1000;//_pulseIn(LEFT_Ctrl);
         val = map(sum10(LEFT_avg), 990, 2020, -255, 255);
-        WheelDrive(L_wheel, val);
+        WheelDrive(L_wheel, 100);
     }
     {
     	RIGHT_times = (RIGHT_times+1)%10;
-        RIGHT_avg[RIGHT_times] = _pulseIn(RIGHT_Ctrl);
+        RIGHT_avg[RIGHT_times] = 2000;//_pulseIn(RIGHT_Ctrl);
         val = map(sum10(RIGHT_avg), 990, 2020, -255, 255);
-        WheelDrive(R_wheel, val);
+        WheelDrive(R_wheel, 200);
     }
 }
