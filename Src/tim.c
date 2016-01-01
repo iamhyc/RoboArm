@@ -39,6 +39,13 @@
 
 /* USER CODE BEGIN 0 */
 
+/* Captured Values */
+TimInputCapture Tim2Ch1 = {0, 0, 0, 0};
+TimInputCapture Tim2Ch2 = {0, 0, 0, 0};
+TimInputCapture Tim2Ch3 = {0, 0, 0, 0};
+TimInputCapture Tim2Ch4 = {0, 0, 0, 0};
+
+
 /* USER CODE END 0 */
 
 TIM_HandleTypeDef htim2;
@@ -52,7 +59,7 @@ void MX_TIM2_Init(void)
   TIM_IC_InitTypeDef sConfigIC;
 
   htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 0;
+  htim2.Init.Prescaler = 71;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim2.Init.Period = 0;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -133,8 +140,10 @@ void MX_TIM4_Init(void)
   sConfigOC.Pulse = 1499;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+	
   HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_1);
-
+	//HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);
+	
   HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_2);
 
 }
@@ -299,7 +308,91 @@ void HAL_TIM_PWM_MspDeInit(TIM_HandleTypeDef* htim_pwm)
 } 
 
 /* USER CODE BEGIN 1 */
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
+{
+  switch(htim->Channel){
+    case HAL_TIM_ACTIVE_CHANNEL_1:
+    {
+      if(Tim2Ch1.State == 0)
+      {
+        Tim2Ch1.Value1 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
+        Tim2Ch1.State = 1;
+      }
+      else if(Tim2Ch1.State == 1)
+      {
+        Tim2Ch1.Value2 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
+        Tim2Ch1.Frequency = (Tim2Ch1.Value2 > Tim2Ch1.Value1)?\
+														(Tim2Ch1.Value2 - Tim2Ch1.Value1):\
+                            ((0xFFFF - Tim2Ch1.Value1) + Tim2Ch1.Value2 + 1);
+        Tim2Ch1.Frequency = HAL_RCC_GetPCLK1Freq() / Tim2Ch1.Frequency;
+        Tim2Ch1.State = 0;
+      }
+    }
+    break;
 
+    case HAL_TIM_ACTIVE_CHANNEL_2:
+    {
+      if(Tim2Ch2.State == 0)
+      {
+        Tim2Ch2.Value1 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_2);
+        Tim2Ch2.State = 1;
+      }
+      else if(Tim2Ch2.State == 1)
+      {
+        Tim2Ch2.Value2 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_2);
+        Tim2Ch2.Frequency = (Tim2Ch2.Value2 > Tim2Ch2.Value1)?\
+														(Tim2Ch2.Value2 - Tim2Ch2.Value1):\
+                            ((0xFFFF - Tim2Ch2.Value1) + Tim2Ch2.Value2 + 1);
+        Tim2Ch2.Frequency = HAL_RCC_GetPCLK1Freq() / Tim2Ch2.Frequency;
+        Tim2Ch2.State = 0;
+      }
+    }
+    break;
+
+    case HAL_TIM_ACTIVE_CHANNEL_3:
+    {
+      if(Tim2Ch3.State == 0)
+      {
+        Tim2Ch3.Value1 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_3);
+        Tim2Ch3.State = 1;
+      }
+      else if(Tim2Ch3.State == 1)
+      {
+        Tim2Ch3.Value2 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_3);
+        Tim2Ch3.Frequency = (Tim2Ch3.Value2 > Tim2Ch3.Value1)?\
+														(Tim2Ch3.Value2 - Tim2Ch3.Value1):\
+                            ((0xFFFF - Tim2Ch3.Value1) + Tim2Ch3.Value2 + 1);
+        Tim2Ch3.Frequency = HAL_RCC_GetPCLK1Freq() / Tim2Ch3.Frequency;
+        Tim2Ch3.State = 0;
+      }
+    }
+    break;
+
+    case HAL_TIM_ACTIVE_CHANNEL_4:
+    {
+    if(htim->Instance == TIM2){
+      if(Tim2Ch4.State == 0)
+      {
+        Tim2Ch4.Value1 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_4);
+        Tim2Ch4.State = 1;
+      }
+      else if(Tim2Ch4.State == 1)
+      {
+        Tim2Ch4.Value2 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_4);
+        Tim2Ch4.Frequency = (Tim2Ch4.Value2 > Tim2Ch4.Value1)?\
+														(Tim2Ch4.Value2 - Tim2Ch4.Value1):\
+                            ((0xFFFF - Tim2Ch4.Value1) + Tim2Ch4.Value2 + 1);
+        Tim2Ch4.Frequency = HAL_RCC_GetPCLK1Freq() / Tim2Ch4.Frequency;
+        Tim2Ch4.State = 0;
+      }
+    }
+    }
+    break;
+		default:
+			break;
+  }
+    
+}
 /* USER CODE END 1 */
 
 /**

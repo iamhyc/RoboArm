@@ -31,6 +31,7 @@
   ******************************************************************************
   */
 /* Includes ------------------------------------------------------------------*/
+#include "tim.h"
 #include "stm32f1xx_hal.h"
 #include "stm32f1xx.h"
 #include "stm32f1xx_it.h"
@@ -68,6 +69,9 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /* USER CODE BEGIN 1 */
-
+void TIM2_IRQHandler (void)
+{
+	HAL_TIM_IRQHandler(&htim2);
+}
 /* USER CODE END 1 */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

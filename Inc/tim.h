@@ -58,7 +58,13 @@ void MX_TIM3_Init(void);
 void MX_TIM4_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-
+typedef struct
+{
+	char								State;
+	uint32_t            Value1;
+	uint32_t            Value2;
+	uint32_t            Frequency;
+}TimInputCapture;
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus
