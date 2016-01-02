@@ -38,7 +38,7 @@
 #include "gpio.h"
 
 /* USER CODE BEGIN 0 */
-
+#include "string.h"
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart1;
@@ -116,7 +116,35 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
 } 
 
 /* USER CODE BEGIN 1 */
+//CopeSerialData为串口中断调用函数，串口每收到一个数据，调用一次这个函数。
 
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
+{
+	CopeSerialData((unsigned char)USART1->DR);
+}
+
+void CopeSerialData(unsigned char ucData)
+{
+	static unsigned char ucRxBuffer[250];
+	static unsigned char ucRxCnt = 0;	
+	
+	ucRxBuffer[ucRxCnt++]=ucData;
+	if (ucRxBuffer[0]!=0x55) //数据头不对，则重新开始寻找0x55数据头
+	{
+		ucRxCnt=0;
+		return;
+	}
+	if (ucRxCnt<11) {return;}//数据不满11个，则返回
+	else
+	{
+		switch(ucRxBuffer[1])
+		{
+			//memcpy为编译器自带的内存拷贝函数，需引用"string.h"，将接收缓冲区的字符拷贝到数据共同体里面，从而实现数据的解析。
+			case 0x53:	memcpy(&stcAngle,&ucRxBuffer[2],8);break;
+		}
+		ucRxCnt=0;
+	}
+}
 /* USER CODE END 1 */
 
 /**

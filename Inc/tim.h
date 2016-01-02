@@ -57,6 +57,8 @@ void MX_TIM2_Init(void);
 void MX_TIM3_Init(void);
 void MX_TIM4_Init(void);
 
+void captureStart(void);
+void pwm_write(uint16_t, uint16_t, float);
 /* USER CODE BEGIN Prototypes */
 typedef struct
 {
@@ -65,6 +67,13 @@ typedef struct
 	uint32_t            Value2;
 	uint32_t            Frequency;
 }TimInputCapture;
+
+extern TimInputCapture Tim2Ch1;
+extern TimInputCapture Tim2Ch2;
+extern TimInputCapture Tim2Ch3;
+extern TimInputCapture Tim2Ch4;
+extern TimInputCapture Tim3Ch4;
+
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

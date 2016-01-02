@@ -35,13 +35,14 @@
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
+#include "RoboArm.h"
 
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
-
+signal_t ctrl_data;
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
 
@@ -56,14 +57,20 @@ void SystemClock_Config(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-
+void SignalFillIn(signal_t *data)
+{
+	data->FIST_IN = Tim2Ch1.Frequency;
+	data->DM_IN = Tim2Ch2.Frequency;
+	data->YAW_IN = Tim2Ch3.Frequency;
+	data->ROLL_IN = Tim2Ch4.Frequency;
+}
 /* USER CODE END 0 */
 
 int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-
+	
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -80,19 +87,19 @@ int main(void)
   MX_TIM3_Init();
   MX_TIM4_Init();
   MX_USART1_UART_Init();
-
+	HAL_Delay(1000);
   /* USER CODE BEGIN 2 */
-
+	Initialize();
   /* USER CODE END 2 */
-
+	captureStart();
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
   /* USER CODE END WHILE */
-	
+	SignalFillIn(&ctrl_data);
+	readControl(ctrl_data);
   /* USER CODE BEGIN 3 */
-
   }
   /* USER CODE END 3 */
 

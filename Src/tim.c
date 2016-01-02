@@ -39,15 +39,22 @@
 
 /* USER CODE BEGIN 0 */
 
-/* Captured Values */
 TimInputCapture Tim2Ch1 = {0, 0, 0, 0};
 TimInputCapture Tim2Ch2 = {0, 0, 0, 0};
 TimInputCapture Tim2Ch3 = {0, 0, 0, 0};
 TimInputCapture Tim2Ch4 = {0, 0, 0, 0};
+TimInputCapture Tim3Ch4 = {0, 0, 0, 0};
 
+
+TIM_OC_InitTypeDef ConfigOCx = \
+{
+	.OCMode = TIM_OCMODE_PWM1,
+	.Pulse = 0,
+	.OCPolarity = TIM_OCPOLARITY_HIGH,
+	.OCFastMode = TIM_OCFAST_DISABLE
+};
 
 /* USER CODE END 0 */
-
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim4;
@@ -107,10 +114,13 @@ void MX_TIM3_Init(void)
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_1);
+	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
 
   HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_2);
+	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
 
   HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_3);
+	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
 
   sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
   sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
@@ -142,10 +152,10 @@ void MX_TIM4_Init(void)
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
 	
   HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_1);
-	//HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);
+	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);
 	
   HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_2);
-
+	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2);
 }
 
 void HAL_TIM_IC_MspInit(TIM_HandleTypeDef* htim_ic)
@@ -308,6 +318,52 @@ void HAL_TIM_PWM_MspDeInit(TIM_HandleTypeDef* htim_pwm)
 } 
 
 /* USER CODE BEGIN 1 */
+
+void captureStart()
+{
+	HAL_TIM_IC_Start(&htim2, TIM_CHANNEL_1);
+	HAL_TIM_IC_Start(&htim2, TIM_CHANNEL_2);
+	HAL_TIM_IC_Start(&htim2, TIM_CHANNEL_3);
+	HAL_TIM_IC_Start(&htim2, TIM_CHANNEL_4);
+	HAL_TIM_IC_Start(&htim3, TIM_CHANNEL_4);//AutoSw
+}
+
+void pwm_write(uint16_t timx, uint16_t Ch, float percent)
+{
+	TIM_HandleTypeDef htimx;
+	uint32_t Channel;
+	
+	switch(timx){
+		case 3:
+			htimx = htim3;
+		break;
+		case 4:
+			htimx = htim4;
+		break;
+	}
+	switch(Ch){
+		case 1:
+			Channel = TIM_CHANNEL_1;
+		break;
+		case 2:
+			Channel = TIM_CHANNEL_2;
+		break;
+		case 3:
+			Channel = TIM_CHANNEL_3;
+		break;
+		case 4:
+			Channel = TIM_CHANNEL_4;
+		break;
+	}
+	HAL_TIM_PWM_Stop(&htimx, Channel);
+	
+	ConfigOCx.Pulse = (uint16_t)((htimx.Init.Period * percent + 1)/ 100) - 1;
+	
+	HAL_TIM_PWM_ConfigChannel(&htimx, &ConfigOCx, Channel);
+	
+	HAL_TIM_PWM_Start(&htimx, Channel);
+}
+
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 {
   switch(htim->Channel){

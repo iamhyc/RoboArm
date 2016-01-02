@@ -42,19 +42,19 @@
 #include "stm32f1xx_hal.h"
 
 /* USER CODE BEGIN Includes */
-
+#include "JY901.h"
 /* USER CODE END Includes */
 
 extern UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN Private defines */
-
+static struct SAngle 	stcAngle;
 /* USER CODE END Private defines */
 
 void MX_USART1_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-
+void CopeSerialData(unsigned char);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

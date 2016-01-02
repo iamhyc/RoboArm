@@ -27,4 +27,6 @@
 ..\output\usart.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h
 ..\output\usart.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h
 ..\output\usart.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
+..\output\usart.o: ../Inc/JY901.h
 ..\output\usart.o: ../Inc/gpio.h
+..\output\usart.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

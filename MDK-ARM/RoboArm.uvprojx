@@ -510,6 +510,21 @@
               <FileType>1</FileType>
               <FilePath>../Src/main.c</FilePath>
             </File>
+            <File>
+              <FileName>Cart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\Cart.c</FilePath>
+            </File>
+            <File>
+              <FileName>RoboArm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\RoboArm.c</FilePath>
+            </File>
+            <File>
+              <FileName>RoboArmCtrl.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\RoboArmCtrl.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

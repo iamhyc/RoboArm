@@ -28,4 +28,6 @@
 ..\output\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
 ..\output\main.o: ../Inc/tim.h
 ..\output\main.o: ../Inc/usart.h
+..\output\main.o: ../Inc/JY901.h
 ..\output\main.o: ../Inc/gpio.h
+..\output\main.o: ../Inc/RoboArm.h
