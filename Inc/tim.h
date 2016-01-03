@@ -5,7 +5,7 @@
   *                      of the TIM instances.
   ******************************************************************************
   *
-  * COPYRIGHT(c) 2015 STMicroelectronics
+  * COPYRIGHT(c) 2016 STMicroelectronics
   *
   * Redistribution and use in source and binary forms, with or without modification,
   * are permitted provided that the following conditions are met:
@@ -57,8 +57,6 @@ void MX_TIM2_Init(void);
 void MX_TIM3_Init(void);
 void MX_TIM4_Init(void);
 
-void captureStart(void);
-void pwm_write(uint16_t, uint16_t, float);
 /* USER CODE BEGIN Prototypes */
 typedef struct
 {
@@ -74,6 +72,8 @@ extern TimInputCapture Tim2Ch3;
 extern TimInputCapture Tim2Ch4;
 extern TimInputCapture Tim3Ch4;
 
+void captureStart(void);
+void pwm_write(uint16_t, uint16_t, float);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

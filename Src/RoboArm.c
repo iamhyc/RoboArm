@@ -6,7 +6,9 @@
 /********************DATA AREA**********************/
 
 static const uint16_t TL = 1000;
+static const uint16_t TM = 2000;
 static const uint16_t TH = 3000;
+static const uint16_t delta = 100;
 /********************DATA AREA**********************/
 
 
@@ -23,21 +25,21 @@ void Initialize()
 /**************状态分段***************/
 uint16_t _digiSwitch(uint16_t data){
   //950-970, 1490-1510, 2030-2050
-  if (data >= 900 && data <= 1000)
+  if (data >= TL && data <= TL + delta)
     return 0;
-  else if (data >= 1400 && data <= 1600)
+  else if (data >= TM && data <= TM + delta)
     return 1;
-  else if (data >= 2000 && data <= 2100)
+  else if (data >= TH && data <= TH + delta)
     return 2;
   else return 0;
 }
 
 uint16_t _analogSwitch(uint16_t data){
-  if (data < 1400)
+  if (data < TL + delta)
     return 0;
-  else if (data >= 1400 && data <= 1500)
+  else if (data >= TM && data <= TM + delta)
     return 1;
-  else if (data >1600)
+  else if (data > TH)
     return 2;
   else return 0;
 }

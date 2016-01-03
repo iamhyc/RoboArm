@@ -4,7 +4,7 @@
   * Description        : Main program body
   ******************************************************************************
   *
-  * COPYRIGHT(c) 2015 STMicroelectronics
+  * COPYRIGHT(c) 2016 STMicroelectronics
   *
   * Redistribution and use in source and binary forms, with or without modification,
   * are permitted provided that the following conditions are met:
@@ -35,10 +35,9 @@
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
-#include "RoboArm.h"
 
 /* USER CODE BEGIN Includes */
-
+#include "RoboArm.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -87,18 +86,25 @@ int main(void)
   MX_TIM3_Init();
   MX_TIM4_Init();
   MX_USART1_UART_Init();
-	HAL_Delay(1000);
+
   /* USER CODE BEGIN 2 */
+	HAL_Delay(1000);
 	Initialize();
   /* USER CODE END 2 */
-	captureStart();
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+	captureStart();
+	HAL_Delay(100);
   while (1)
   {
+		
+		SignalFillIn(&ctrl_data);
+		readControl(ctrl_data);
   /* USER CODE END WHILE */
-	SignalFillIn(&ctrl_data);
-	readControl(ctrl_data);
+	
+	
+	
   /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

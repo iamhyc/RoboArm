@@ -5,7 +5,7 @@
   *                      of the TIM instances.
   ******************************************************************************
   *
-  * COPYRIGHT(c) 2015 STMicroelectronics
+  * COPYRIGHT(c) 2016 STMicroelectronics
   *
   * Redistribution and use in source and binary forms, with or without modification,
   * are permitted provided that the following conditions are met:
@@ -34,7 +34,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "tim.h"
-
+#include "usart.h"
 #include "gpio.h"
 
 /* USER CODE BEGIN 0 */
@@ -55,6 +55,7 @@ TIM_OC_InitTypeDef ConfigOCx = \
 };
 
 /* USER CODE END 0 */
+
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim4;
@@ -62,14 +63,20 @@ TIM_HandleTypeDef htim4;
 /* TIM2 init function */
 void MX_TIM2_Init(void)
 {
+  TIM_ClockConfigTypeDef sClockSourceConfig;
   TIM_MasterConfigTypeDef sMasterConfig;
   TIM_IC_InitTypeDef sConfigIC;
 
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 71;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 0;
+  htim2.Init.Period = 99;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  HAL_TIM_Base_Init(&htim2);
+
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig);
+
   HAL_TIM_IC_Init(&htim2);
 
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
@@ -79,7 +86,7 @@ void MX_TIM2_Init(void)
   sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
   sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
   sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
-  sConfigIC.ICFilter = 0;
+  sConfigIC.ICFilter = 15;
   HAL_TIM_IC_ConfigChannel(&htim2, &sConfigIC, TIM_CHANNEL_1);
 
   HAL_TIM_IC_ConfigChannel(&htim2, &sConfigIC, TIM_CHANNEL_2);
@@ -92,6 +99,7 @@ void MX_TIM2_Init(void)
 /* TIM3 init function */
 void MX_TIM3_Init(void)
 {
+  TIM_ClockConfigTypeDef sClockSourceConfig;
   TIM_MasterConfigTypeDef sMasterConfig;
   TIM_OC_InitTypeDef sConfigOC;
   TIM_IC_InitTypeDef sConfigIC;
@@ -101,6 +109,11 @@ void MX_TIM3_Init(void)
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim3.Init.Period = 999;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  HAL_TIM_Base_Init(&htim3);
+
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  HAL_TIM_ConfigClockSource(&htim3, &sClockSourceConfig);
+
   HAL_TIM_PWM_Init(&htim3);
 
   HAL_TIM_IC_Init(&htim3);
@@ -114,13 +127,10 @@ void MX_TIM3_Init(void)
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_1);
-	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
 
   HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_2);
-	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
 
   HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_3);
-	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
 
   sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
   sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
@@ -150,19 +160,17 @@ void MX_TIM4_Init(void)
   sConfigOC.Pulse = 1499;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-	
   HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_1);
-	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);
-	
+
   HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_2);
-	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2);
+
 }
 
-void HAL_TIM_IC_MspInit(TIM_HandleTypeDef* htim_ic)
+void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base)
 {
 
   GPIO_InitTypeDef GPIO_InitStruct;
-  if(htim_ic->Instance==TIM2)
+  if(htim_base->Instance==TIM2)
   {
   /* USER CODE BEGIN TIM2_MspInit 0 */
 
@@ -181,17 +189,14 @@ void HAL_TIM_IC_MspInit(TIM_HandleTypeDef* htim_ic)
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
+    /* Peripheral interrupt init*/
+    HAL_NVIC_SetPriority(TIM2_IRQn, 1, 0);
+    HAL_NVIC_EnableIRQ(TIM2_IRQn);
   /* USER CODE BEGIN TIM2_MspInit 1 */
 
   /* USER CODE END TIM2_MspInit 1 */
   }
-}
-
-void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef* htim_pwm)
-{
-
-  GPIO_InitTypeDef GPIO_InitStruct;
-  if(htim_pwm->Instance==TIM3)
+  else if(htim_base->Instance==TIM3)
   {
   /* USER CODE BEGIN TIM3_MspInit 0 */
 
@@ -220,11 +225,20 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef* htim_pwm)
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(AutoSw_GPIO_Port, &GPIO_InitStruct);
 
+    /* Peripheral interrupt init*/
+    HAL_NVIC_SetPriority(TIM3_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(TIM3_IRQn);
   /* USER CODE BEGIN TIM3_MspInit 1 */
 
   /* USER CODE END TIM3_MspInit 1 */
   }
-  else if(htim_pwm->Instance==TIM4)
+}
+
+void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef* htim_pwm)
+{
+
+  GPIO_InitTypeDef GPIO_InitStruct;
+  if(htim_pwm->Instance==TIM4)
   {
   /* USER CODE BEGIN TIM4_MspInit 0 */
 
@@ -241,16 +255,19 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef* htim_pwm)
     GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
+    /* Peripheral interrupt init*/
+    HAL_NVIC_SetPriority(TIM4_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(TIM4_IRQn);
   /* USER CODE BEGIN TIM4_MspInit 1 */
 
   /* USER CODE END TIM4_MspInit 1 */
   }
 }
 
-void HAL_TIM_IC_MspDeInit(TIM_HandleTypeDef* htim_ic)
+void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base)
 {
 
-  if(htim_ic->Instance==TIM2)
+  if(htim_base->Instance==TIM2)
   {
   /* USER CODE BEGIN TIM2_MspDeInit 0 */
 
@@ -266,16 +283,14 @@ void HAL_TIM_IC_MspDeInit(TIM_HandleTypeDef* htim_ic)
     */
     HAL_GPIO_DeInit(GPIOA, FIST_IN_Pin|DM_IN_Pin|YAW_IN_Pin|ROLL_IN_Pin);
 
-  }
+    /* Peripheral interrupt Deinit*/
+    HAL_NVIC_DisableIRQ(TIM2_IRQn);
+
   /* USER CODE BEGIN TIM2_MspDeInit 1 */
 
   /* USER CODE END TIM2_MspDeInit 1 */
-}
-
-void HAL_TIM_PWM_MspDeInit(TIM_HandleTypeDef* htim_pwm)
-{
-
-  if(htim_pwm->Instance==TIM3)
+  }
+  else if(htim_base->Instance==TIM3)
   {
   /* USER CODE BEGIN TIM3_MspDeInit 0 */
 
@@ -293,11 +308,19 @@ void HAL_TIM_PWM_MspDeInit(TIM_HandleTypeDef* htim_pwm)
 
     HAL_GPIO_DeInit(GPIOB, R_Wheel_Pin|AutoSw_Pin);
 
+    /* Peripheral interrupt Deinit*/
+    HAL_NVIC_DisableIRQ(TIM3_IRQn);
+
   /* USER CODE BEGIN TIM3_MspDeInit 1 */
 
   /* USER CODE END TIM3_MspDeInit 1 */
   }
-  else if(htim_pwm->Instance==TIM4)
+}
+
+void HAL_TIM_PWM_MspDeInit(TIM_HandleTypeDef* htim_pwm)
+{
+
+  if(htim_pwm->Instance==TIM4)
   {
   /* USER CODE BEGIN TIM4_MspDeInit 0 */
 
@@ -311,21 +334,24 @@ void HAL_TIM_PWM_MspDeInit(TIM_HandleTypeDef* htim_pwm)
     */
     HAL_GPIO_DeInit(GPIOB, YAW_OUT_Pin|ROLL_OUT_Pin);
 
+    /* Peripheral interrupt Deinit*/
+    HAL_NVIC_DisableIRQ(TIM4_IRQn);
+
+  }
   /* USER CODE BEGIN TIM4_MspDeInit 1 */
 
   /* USER CODE END TIM4_MspDeInit 1 */
-  }
 } 
 
 /* USER CODE BEGIN 1 */
 
 void captureStart()
 {
-	HAL_TIM_IC_Start(&htim2, TIM_CHANNEL_1);
-	HAL_TIM_IC_Start(&htim2, TIM_CHANNEL_2);
-	HAL_TIM_IC_Start(&htim2, TIM_CHANNEL_3);
-	HAL_TIM_IC_Start(&htim2, TIM_CHANNEL_4);
-	HAL_TIM_IC_Start(&htim3, TIM_CHANNEL_4);//AutoSw
+	HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_1);
+	HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_2);
+	HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_3);
+	HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_4);
+	//HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_4);//AutoSw
 }
 
 void pwm_write(uint16_t timx, uint16_t Ch, float percent)
@@ -366,6 +392,8 @@ void pwm_write(uint16_t timx, uint16_t Ch, float percent)
 
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 {
+	HAL_Delay(100);
+	HAL_UART_Transmit(&huart1, (uint8_t *)"HereCapture\n", sizeof("HereCapture\n"), 0xFFFF);
   switch(htim->Channel){
     case HAL_TIM_ACTIVE_CHANNEL_1:
     {
