@@ -5,9 +5,9 @@
 
 /********************DATA AREA**********************/
 
-static const uint16_t TL = 1000;
-static const uint16_t TM = 2000;
-static const uint16_t TH = 3000;
+static const uint16_t TL = 17800;
+static const uint16_t TM = 23700;
+static const uint16_t TH = 35400;
 static const uint16_t delta = 100;
 /********************DATA AREA**********************/
 

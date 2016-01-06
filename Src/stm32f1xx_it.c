@@ -119,13 +119,7 @@ void TIM4_IRQHandler(void)
 void USART1_IRQHandler(void)
 {
   /* USER CODE BEGIN USART1_IRQn 0 */
-	if(__HAL_UART_GET_FLAG(&huart1, UART_FLAG_RXNE) != RESET)
-  {
-		CopeSerialData((unsigned char)USART1->DR);//处理数据
-		HAL_Delay(50);
-		HAL_UART_Transmit(&huart1, (uint8_t *)"hehe\n", sizeof("hehe\n"), 0xFFFF);
-		HAL_Delay(50);
-  }
+	
   /* USER CODE END USART1_IRQn 0 */
   HAL_UART_IRQHandler(&huart1);
   /* USER CODE BEGIN USART1_IRQn 1 */

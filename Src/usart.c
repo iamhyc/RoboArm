@@ -122,13 +122,14 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
 } 
 
 /* USER CODE BEGIN 1 */
-//CopeSerialData为串口中断调用函数，串口每收到一个数据，调用一次这个函数。
+
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
 {
 	CopeSerialData((unsigned char)USART1->DR);
 }
 
+//CopeSerialData为串口中断调用函数，串口每收到一个数据，调用一次这个函数。
 void CopeSerialData(unsigned char ucData)
 {
 	static unsigned char ucRxBuffer[250];

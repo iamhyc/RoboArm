@@ -41,7 +41,7 @@
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
-signal_t ctrl_data;
+signal_t ctrl_data;	//控制信号结构体
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
 
@@ -56,7 +56,7 @@ void SystemClock_Config(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-void SignalFillIn(signal_t *data)
+void SignalFillIn(signal_t *data)//while(1)中填充结构体
 {
 	data->FIST_IN = Tim2Ch1.Frequency;
 	data->DM_IN = Tim2Ch2.Frequency;
@@ -89,20 +89,19 @@ int main(void)
 
   /* USER CODE BEGIN 2 */
 	HAL_Delay(1000);
-	Initialize();
+	Initialize();//全部赋初值0
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-	captureStart();
+	captureStart();//启动Input Capture通道
 	HAL_Delay(100);
   while (1)
   {
+		//HAL_UART_Transmit_IT(&huart1, (uint8_t *)"aaa", sizeof("aaa"));
 		SignalFillIn(&ctrl_data);
-		//readControl(ctrl_data);
+		readControl(ctrl_data);//转移到RoboArm.c的逻辑主体
   /* USER CODE END WHILE */
-	
-	
 	
   /* USER CODE BEGIN 3 */
   }
@@ -160,7 +159,6 @@ void assert_failed(uint8_t* file, uint32_t line)
   /* User can add his own implementation to report the file name and line number,
     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
   /* USER CODE END 6 */
-
 }
 
 #endif

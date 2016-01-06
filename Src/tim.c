@@ -134,11 +134,15 @@ void MX_TIM3_Init(void)
   sConfigOC.Pulse = 1;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+	
   HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_1);
+	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);	//直接启动输出PWM
 
   HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_2);
+	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
 
   HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_3);
+	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
 
   sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
   sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
@@ -168,9 +172,12 @@ void MX_TIM4_Init(void)
   sConfigOC.Pulse = 1499;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+	
   HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_1);
+	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);
 
   HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_2);
+	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2);
 
 }
 
@@ -359,7 +366,7 @@ void captureStart()
 	HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_2);
 	HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_3);
 	HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_4);
-	//HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_4);//AutoSw
+	HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_4);//AutoSw
 }
 
 void pwm_write(uint16_t timx, uint16_t Ch, float percent)
