@@ -98,9 +98,8 @@ int main(void)
 	HAL_Delay(100);
   while (1)
   {
-		
 		SignalFillIn(&ctrl_data);
-		readControl(ctrl_data);
+		//readControl(ctrl_data);
   /* USER CODE END WHILE */
 	
 	
