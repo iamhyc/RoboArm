@@ -49,6 +49,8 @@ extern UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN Private defines */
 static struct SAngle 	stcAngle;
+	 
+static uint8_t *ch = (uint8_t *)"null\n";
 /* USER CODE END Private defines */
 
 void MX_USART1_UART_Init(void);

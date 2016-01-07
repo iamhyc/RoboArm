@@ -131,7 +131,7 @@ void MX_TIM3_Init(void)
   HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig);
 
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 1;
+  sConfigOC.Pulse = 199;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
 	
@@ -241,7 +241,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base)
     HAL_GPIO_Init(AutoSw_GPIO_Port, &GPIO_InitStruct);
 
     /* Peripheral interrupt init*/
-    HAL_NVIC_SetPriority(TIM3_IRQn, 0, 0);
+    HAL_NVIC_SetPriority(TIM3_IRQn, 1, 0);
     HAL_NVIC_EnableIRQ(TIM3_IRQn);
   /* USER CODE BEGIN TIM3_MspInit 1 */
 
@@ -271,7 +271,7 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef* htim_pwm)
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
     /* Peripheral interrupt init*/
-    HAL_NVIC_SetPriority(TIM4_IRQn, 0, 0);
+    HAL_NVIC_SetPriority(TIM4_IRQn, 1, 0);
     HAL_NVIC_EnableIRQ(TIM4_IRQn);
   /* USER CODE BEGIN TIM4_MspInit 1 */
 
@@ -410,6 +410,9 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
   switch(htim->Channel){
     case HAL_TIM_ACTIVE_CHANNEL_1:
     {
+			HAL_Delay(10);
+			HAL_UART_Transmit(&huart1, (uint8_t *)"Ch1IN\n", sizeof("Ch1IN\n"), 0xFFFF);
+			HAL_Delay(10);
       if(Tim2Ch1.State == 0)
       {
         Tim2Ch1.Value1 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
@@ -441,6 +444,9 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 
     case HAL_TIM_ACTIVE_CHANNEL_2:
     {
+			HAL_Delay(10);
+			HAL_UART_Transmit(&huart1, (uint8_t *)"Ch2IN\n", sizeof("Ch2IN\n"), 0xFFFF);
+			HAL_Delay(10);
       if(Tim2Ch2.State == 0)
       {
         Tim2Ch2.Value1 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_2);
@@ -472,6 +478,9 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 
     case HAL_TIM_ACTIVE_CHANNEL_3:
     {
+			HAL_Delay(10);
+			HAL_UART_Transmit(&huart1, (uint8_t *)"Ch3IN\n", sizeof("Ch3IN\n"), 0xFFFF);
+			HAL_Delay(10);
       if(Tim2Ch3.State == 0)
       {
         Tim2Ch3.Value1 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_3);
@@ -504,6 +513,9 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
     case HAL_TIM_ACTIVE_CHANNEL_4:
     {
     if(htim->Instance == TIM2){
+			HAL_Delay(10);
+			HAL_UART_Transmit(&huart1, (uint8_t *)"Ch4IN\n", sizeof("Ch4IN\n"), 0xFFFF);
+			HAL_Delay(10);
       if(Tim2Ch4.State == 0)
       {
         Tim2Ch4.Value1 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_4);
@@ -532,6 +544,9 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
       }
     }
 		else if (htim->Instance == TIM3){
+			HAL_Delay(10);
+			HAL_UART_Transmit(&huart1, (uint8_t *)"TIM3Ch4IN\n", sizeof("TIM3Ch4IN\n"), 0xFFFF);
+			HAL_Delay(10);
 			if(Tim3Ch4.State == 0)
       {
         Tim3Ch4.Value1 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_4);

@@ -64,7 +64,15 @@ void SignalFillIn(signal_t *data)//while(1)中填充结构体
 	data->ROLL_IN = Tim2Ch4.Frequency;
 }
 /* USER CODE END 0 */
-
+void getcha(char ch[4],uint8_t in)
+{
+	int i;
+	for(i=2;i>=0;i--)
+	{
+		ch[i]=in%10;
+		in=in/10;
+	}
+}
 int main(void)
 {
 
@@ -96,11 +104,16 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 	captureStart();//启动Input Capture通道
 	HAL_Delay(100);
+	//HAL_UART_Receive_IT(&huart1, (uint8_t *)"hack", 1);
   while (1)
   {
 		//HAL_UART_Transmit_IT(&huart1, (uint8_t *)"aaa", sizeof("aaa"));
 		SignalFillIn(&ctrl_data);
-		readControl(ctrl_data);//转移到RoboArm.c的逻辑主体
+		HAL_Delay(10);
+		HAL_UART_Transmit(&huart1, ch, sizeof(ch), 0xFFFF);
+		HAL_Delay(10);
+		
+		//readControl(ctrl_data);//转移到RoboArm.c的逻辑主体
   /* USER CODE END WHILE */
 	
   /* USER CODE BEGIN 3 */
