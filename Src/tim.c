@@ -147,7 +147,7 @@ void MX_TIM3_Init(void)
   sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
   sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
   sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
-  sConfigIC.ICFilter = 0;
+  sConfigIC.ICFilter = 15;
   HAL_TIM_IC_ConfigChannel(&htim3, &sConfigIC, TIM_CHANNEL_4);
 
 }
@@ -414,6 +414,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
       {
         Tim2Ch1.Value1 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
 				{
+				HAL_TIM_IC_Stop(&htim2,TIM_CHANNEL_1);
 				ConfigICx.ICPolarity = TIM_INPUTCHANNELPOLARITY_FALLING;
 				HAL_TIM_IC_ConfigChannel(&htim2, &ConfigICx, TIM_CHANNEL_1);
 				HAL_TIM_IC_Start(&htim2,TIM_CHANNEL_1);
@@ -428,6 +429,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
                             ((0xFFFF - Tim2Ch1.Value1) + Tim2Ch1.Value2 + 1);
         Tim2Ch1.Frequency = HAL_RCC_GetPCLK1Freq() / Tim2Ch1.Frequency;
 				{
+				HAL_TIM_IC_Stop(&htim2,TIM_CHANNEL_1);
 				ConfigICx.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
 				HAL_TIM_IC_ConfigChannel(&htim2, &ConfigICx, TIM_CHANNEL_1);
 				HAL_TIM_IC_Start(&htim2,TIM_CHANNEL_1);
@@ -443,10 +445,11 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
       {
         Tim2Ch2.Value1 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_2);
 				{
+				HAL_TIM_IC_Stop(&htim2,TIM_CHANNEL_2);
 				ConfigICx.ICPolarity = TIM_INPUTCHANNELPOLARITY_FALLING;
 				HAL_TIM_IC_ConfigChannel(&htim2, &ConfigICx, TIM_CHANNEL_2);
 				HAL_TIM_IC_Start(&htim2,TIM_CHANNEL_2);
-        Tim2Ch1.State = 1;
+        Tim2Ch2.State = 1;
 				}
       }
       else if(Tim2Ch2.State == 1)
@@ -457,10 +460,11 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
                             ((0xFFFF - Tim2Ch2.Value1) + Tim2Ch2.Value2 + 1);
         Tim2Ch2.Frequency = HAL_RCC_GetPCLK1Freq() / Tim2Ch2.Frequency;
         {
+				HAL_TIM_IC_Stop(&htim2,TIM_CHANNEL_2);
 				ConfigICx.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
 				HAL_TIM_IC_ConfigChannel(&htim2, &ConfigICx, TIM_CHANNEL_2);
 				HAL_TIM_IC_Start(&htim2,TIM_CHANNEL_2);
-        Tim2Ch1.State = 0;
+        Tim2Ch2.State = 0;
 				}
       }
     }
@@ -472,10 +476,11 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
       {
         Tim2Ch3.Value1 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_3);
         {
+				HAL_TIM_IC_Stop(&htim2,TIM_CHANNEL_3);
 				ConfigICx.ICPolarity = TIM_INPUTCHANNELPOLARITY_FALLING;
 				HAL_TIM_IC_ConfigChannel(&htim2, &ConfigICx, TIM_CHANNEL_3);
 				HAL_TIM_IC_Start(&htim2,TIM_CHANNEL_3);
-        Tim2Ch1.State = 1;
+        Tim2Ch3.State = 1;
 				}
       }
       else if(Tim2Ch3.State == 1)
@@ -486,10 +491,11 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
                             ((0xFFFF - Tim2Ch3.Value1) + Tim2Ch3.Value2 + 1);
         Tim2Ch3.Frequency = HAL_RCC_GetPCLK1Freq() / Tim2Ch3.Frequency;
         {
+				HAL_TIM_IC_Stop(&htim2,TIM_CHANNEL_3);
 				ConfigICx.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
 				HAL_TIM_IC_ConfigChannel(&htim2, &ConfigICx, TIM_CHANNEL_3);
 				HAL_TIM_IC_Start(&htim2,TIM_CHANNEL_3);
-        Tim2Ch1.State = 0;
+        Tim2Ch3.State = 0;
 				}
       }
     }
@@ -502,10 +508,11 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
       {
         Tim2Ch4.Value1 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_4);
         {
+				HAL_TIM_IC_Stop(&htim2,TIM_CHANNEL_4);
 				ConfigICx.ICPolarity = TIM_INPUTCHANNELPOLARITY_FALLING;
 				HAL_TIM_IC_ConfigChannel(&htim2, &ConfigICx, TIM_CHANNEL_4);
 				HAL_TIM_IC_Start(&htim2,TIM_CHANNEL_4);
-        Tim2Ch1.State = 1;
+        Tim2Ch4.State = 1;
 				}
       }
       else if(Tim2Ch4.State == 1)
@@ -516,13 +523,42 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
                             ((0xFFFF - Tim2Ch4.Value1) + Tim2Ch4.Value2 + 1);
         Tim2Ch4.Frequency = HAL_RCC_GetPCLK1Freq() / Tim2Ch4.Frequency;
         {
+				HAL_TIM_IC_Stop(&htim2,TIM_CHANNEL_4);
 				ConfigICx.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
 				HAL_TIM_IC_ConfigChannel(&htim2, &ConfigICx, TIM_CHANNEL_4);
 				HAL_TIM_IC_Start(&htim2,TIM_CHANNEL_4);
-        Tim2Ch1.State = 0;
+        Tim2Ch4.State = 0;
 				}
       }
     }
+		else if (htim->Instance == TIM3){
+			if(Tim3Ch4.State == 0)
+      {
+        Tim3Ch4.Value1 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_4);
+        {
+				HAL_TIM_IC_Stop(&htim3,TIM_CHANNEL_4);
+				ConfigICx.ICPolarity = TIM_INPUTCHANNELPOLARITY_FALLING;
+				HAL_TIM_IC_ConfigChannel(&htim3, &ConfigICx, TIM_CHANNEL_4);
+				HAL_TIM_IC_Start(&htim3,TIM_CHANNEL_4);
+        Tim3Ch4.State = 1;
+				}
+      }
+      else if(Tim3Ch4.State == 1)
+      {
+        Tim3Ch4.Value2 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_4);
+        Tim3Ch4.Frequency = (Tim3Ch4.Value2 > Tim3Ch4.Value1)?\
+														(Tim3Ch4.Value2 - Tim3Ch4.Value1):\
+                            ((0xFFFF - Tim3Ch4.Value1) + Tim3Ch4.Value2 + 1);
+        Tim3Ch4.Frequency = HAL_RCC_GetPCLK1Freq() / Tim3Ch4.Frequency;
+        {
+				HAL_TIM_IC_Stop(&htim3,TIM_CHANNEL_4);
+				ConfigICx.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
+				HAL_TIM_IC_ConfigChannel(&htim3, &ConfigICx, TIM_CHANNEL_4);
+				HAL_TIM_IC_Start(&htim3,TIM_CHANNEL_4);
+        Tim3Ch4.State = 0;
+				}
+      }
+		}
     }
     break;
 		default:

@@ -27,4 +27,6 @@
 ..\output\tim.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h
 ..\output\tim.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h
 ..\output\tim.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
+..\output\tim.o: ../Inc/usart.h
+..\output\tim.o: ../Inc/JY901.h
 ..\output\tim.o: ../Inc/gpio.h
