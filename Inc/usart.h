@@ -49,13 +49,14 @@ extern UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN Private defines */
 static struct SAngle 	stcAngle;
-	 
-static uint8_t *ch = (uint8_t *)"null\n";
+static char ch[9] = {0};
 /* USER CODE END Private defines */
 
 void MX_USART1_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
+void heheMessage(void);
+void callMessage(char *);
 void CopeSerialData(unsigned char);
 /* USER CODE END Prototypes */
 

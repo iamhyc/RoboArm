@@ -1,28 +1,42 @@
 #include "tim.h"
+#include "usart.h"
 #include "RoboArmCtrl.h"
 #include "mxconstants.h"
 
-const static int SDE = 1;
+//const static int SDE = 1;
+
+/**************DATA AREA**************/
+int POS_X = 0;//DC Motor POS
+int POS_Y = 0;//YAW
+int POS_Z = 0;//ROLL
+float read_POS_X = 0;
+char FIST_STAT = 0;
+char AutoSw;
+/**************DATA AREA**************/
 
 /***************Servo相关函数*******************/
-float Pos2Per(char angle)
+float Pos2Per(int angle)
 {
-	float Per = 7.5 + (angle * 1.5 / 90);
+	float Per = 7.5 + (angle * 5 / 90);
 	return Per;
 }
 
 void Servo_Reset(){
-  Servo_Drive(0, 90);
-  Servo_Drive(1, 90);
+  Servo_Drive(0, 0);
+  Servo_Drive(1, 0);
 }
 
-void Servo_Drive(unsigned char servor, char pos){
+void Servo_Drive(int servor, int pos){
+
 	float pert = Pos2Per(pos);
+
   switch(servor){
-    case 0:
+    case 0://ROLL SERVO
+			HAL_Delay(1);
 			pwm_write(4, 2, pert);
 		break;
-    case 1:
+    case 1://YAW SERVO
+			HAL_Delay(1);
 			pwm_write(4, 1, pert);
 		break;
   }
@@ -31,10 +45,9 @@ void Servo_Drive(unsigned char servor, char pos){
 
 /***************直流电机相关*******************/
 void DC_Rotate(uint16_t data){
-  
+
   switch(data){
     case 0://Backward
-			pwm_write(3, 1, 1);
 			HAL_GPIO_WritePin(GPIOB, nPinM_Pin, GPIO_PIN_SET);
 			HAL_GPIO_WritePin(GPIOB, pPinM_Pin, GPIO_PIN_RESET);
     break;
@@ -43,12 +56,30 @@ void DC_Rotate(uint16_t data){
 			HAL_GPIO_WritePin(GPIOB, pPinM_Pin, GPIO_PIN_RESET);
     break;
     case 2://Forward
-			pwm_write(3, 1, 1);
       HAL_GPIO_WritePin(GPIOB, nPinM_Pin, GPIO_PIN_RESET);
 			HAL_GPIO_WritePin(GPIOB, pPinM_Pin, GPIO_PIN_SET);
     break;
   }
   
+}
+
+void DC_Move()
+{
+	
+	float pert = POS_X;
+	
+	if (pert > 1){
+		DC_Rotate(2);
+		pwm_write(3, 1, pert);
+		return;
+	}
+	
+	if (pert < -1){
+		DC_Rotate(0);
+		pwm_write(3, 1, -pert);
+		return;
+	}
+	DC_Rotate(1);
 }
 
 void DC_pwmMove(){
@@ -65,50 +96,24 @@ void DC_pwmMove(){
 	{
 		HAL_GPIO_WritePin(GPIOB, nPinM_Pin, GPIO_PIN_SET);
 		HAL_GPIO_WritePin(GPIOB, pPinM_Pin, GPIO_PIN_RESET);
-		pwm_write(3, 1, (-1)*pwm);
+		pwm_write(3, 1, -pwm);
 	}
-}
-
-
-void DC_SetPosX(){
-  if (read_POS_X == 0) return;
-  //pwmMove();
-	{/******************************************/
-		if (read_POS_X - POS_X > SDE){
-			DC_Rotate(0);
-		}
-		else if (POS_X - read_POS_X> SDE){
-			DC_Rotate(2);
-		}
-		else {
-			DC_Rotate(1);
-		}
-	}/******************************************/
 }
 
 /***************直流电机相关*******************/
 
 /***************爪子相关*******************/
-void Fist_StatusChange(unsigned char data){
+void Fist_StatusChange(char data){
     switch(data){
     case 0:
-      if (FIST_STAT != 0){
-        FIST_STAT = 0;
         Hold_Tight();
-      }
     break;
     case 1://RESET
-      if (FIST_STAT != 1){
-        FIST_STAT = 1;
         HAL_GPIO_WritePin(GPIOB, nPinF_Pin, GPIO_PIN_RESET);
 				HAL_GPIO_WritePin(GPIOB, pPinF_Pin, GPIO_PIN_RESET);
-      }
     break;
     case 2:
-      if (FIST_STAT != 2){
-        FIST_STAT = 2;
         Hold_Release();
-      }
     break;
     default:
     break;

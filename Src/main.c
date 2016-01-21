@@ -58,21 +58,29 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN 0 */
 void SignalFillIn(signal_t *data)//while(1)中填充结构体
 {
-	data->FIST_IN = Tim2Ch1.Frequency;
-	data->DM_IN = Tim2Ch2.Frequency;
-	data->YAW_IN = Tim2Ch3.Frequency;
-	data->ROLL_IN = Tim2Ch4.Frequency;
+	if (Tim2Ch3.Frequency/200 < 87 || Tim2Ch3.Frequency/200 > 179 \
+		|| Tim2Ch4.Frequency/200 < 87 || Tim2Ch4.Frequency/200 > 179 \
+		/*|| Tim2Ch1.Frequency/200 < 87 || Tim2Ch1.Frequency/200 > 179 \
+		|| Tim2Ch2.Frequency/200 < 87 || Tim2Ch2.Frequency/200 > 179*/) \
+		return;
+	data->FIST_IN = Tim2Ch1.Frequency / 200;
+	data->DM_IN = Tim2Ch2.Frequency / 200;
+	data->YAW_IN = Tim2Ch3.Frequency / 200;
+	data->ROLL_IN = Tim2Ch4.Frequency / 200;
+	data->AutoSw = Tim3Ch4.Frequency / 200;
 }
 /* USER CODE END 0 */
-void getcha(char ch[4],uint8_t in)
+void getcha(char ch[9],uint16_t in)
 {
 	int i;
-	for(i=2;i>=0;i--)
+	for(i=7;i>=0;i--)
 	{
-		ch[i]=in%10;
+		ch[i]=in%10+'0'-0;
 		in=in/10;
 	}
+	ch[8] = '\n';
 }
+
 int main(void)
 {
 
@@ -104,18 +112,13 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 	captureStart();//启动Input Capture通道
 	HAL_Delay(100);
-	//HAL_UART_Receive_IT(&huart1, (uint8_t *)"hack", 1);
+
   while (1)
   {
-		//HAL_UART_Transmit_IT(&huart1, (uint8_t *)"aaa", sizeof("aaa"));
 		SignalFillIn(&ctrl_data);
-		HAL_Delay(10);
-		HAL_UART_Transmit(&huart1, ch, sizeof(ch), 0xFFFF);
-		HAL_Delay(10);
-		
-		//readControl(ctrl_data);//转移到RoboArm.c的逻辑主体
+		readControl(ctrl_data);//转移到RoboArm.c的逻辑主体
   /* USER CODE END WHILE */
-	
+		
   /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

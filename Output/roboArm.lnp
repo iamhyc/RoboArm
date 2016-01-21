@@ -24,6 +24,7 @@
 "..\output\stm32f1xx_hal_flash.o"
 "..\output\stm32f1xx_hal_rcc.o"
 --library_type=microlib --strict --scatter "..\Output\RoboArm.sct"
+
 --diag_suppress=L6329 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
 --list "..\Listing\RoboArm.map" -o ..\Output\RoboArm.axf

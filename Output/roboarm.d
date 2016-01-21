@@ -1,6 +1,6 @@
 ..\output\roboarm.o: ..\Src\RoboArm.c
 ..\output\roboarm.o: ../Inc/Cart.h
-..\output\roboarm.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+..\output\roboarm.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 ..\output\roboarm.o: ../Inc/usart.h
 ..\output\roboarm.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h
 ..\output\roboarm.o: ../Inc/stm32f1xx_hal_conf.h
@@ -15,7 +15,7 @@
 ..\output\roboarm.o: ../Drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h
 ..\output\roboarm.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h
 ..\output\roboarm.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-..\output\roboarm.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\output\roboarm.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 ..\output\roboarm.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc_ex.h
 ..\output\roboarm.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h
 ..\output\roboarm.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio_ex.h

@@ -87,7 +87,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
     /* Peripheral interrupt init*/
-    HAL_NVIC_SetPriority(USART1_IRQn, 0, 1);
+    HAL_NVIC_SetPriority(USART1_IRQn, 1, 7);
     HAL_NVIC_EnableIRQ(USART1_IRQn);
   /* USER CODE BEGIN USART1_MspInit 1 */
 
@@ -123,10 +123,23 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
 
 /* USER CODE BEGIN 1 */
 
+void heheMessage()
+{
+	HAL_Delay(10);
+	HAL_UART_Transmit(&huart1, (uint8_t *)"hehe\n", sizeof("hehe\n"), 0xFFFF);
+	HAL_Delay(10);
+}
+
+void callMessage(char *ch)
+{
+	HAL_Delay(10);
+	HAL_UART_Transmit(&huart1, (uint8_t *)ch, 9, 0xFFFF);
+	HAL_Delay(10);
+}
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
 {
-	ch = (uint8_t *)"HERE\n";
+	//ch = "HERE\n";
 	HAL_Delay(100);
 	CopeSerialData((unsigned char)USART1->DR);
 	//HAL_UART_Receive_IT(&huart1, (uint8_t *)"hack", 1);
