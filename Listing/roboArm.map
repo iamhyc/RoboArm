@@ -1,4 +1,4 @@
-Component: ARM Compiler 5.05 update 1 (build 106) Tool: armlink [4d0efa]
+Component: ARM Compiler 5.06 update 1 (build 61) Tool: armlink [4d35a8]
 
 ==============================================================================
 
@@ -778,7 +778,7 @@ Removing Unused input sections from the image.
     Removing stm32f1xx_hal_flash.o(i.FLASH_WaitForLastOperation), (104 bytes).
     Removing stm32f1xx_hal_flash.o(i.HAL_FLASH_EndOfOperationCallback), (2 bytes).
     Removing stm32f1xx_hal_flash.o(i.HAL_FLASH_GetError), (12 bytes).
-    Removing stm32f1xx_hal_flash.o(i.HAL_FLASH_IRQHandler), (272 bytes).
+    Removing stm32f1xx_hal_flash.o(i.HAL_FLASH_IRQHandler), (276 bytes).
     Removing stm32f1xx_hal_flash.o(i.HAL_FLASH_Lock), (20 bytes).
     Removing stm32f1xx_hal_flash.o(i.HAL_FLASH_OB_Launch), (10 bytes).
     Removing stm32f1xx_hal_flash.o(i.HAL_FLASH_OB_Lock), (20 bytes).
@@ -801,7 +801,7 @@ Removing Unused input sections from the image.
     Removing stm32f1xx_hal_rcc.o(i.HAL_RCC_NMI_IRQHandler), (28 bytes).
     Removing ffixi.o(.text), (50 bytes).
 
-320 unused section(s) (total 19276 bytes) removed from the image.
+320 unused section(s) (total 19280 bytes) removed from the image.
 
 ==============================================================================
 
@@ -1464,27 +1464,27 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
-       304         32          0          8          0       1874   cart.o
-       112         14          0          0          0     248459   gpio.o
-       304         32          0          0         20       2535   main.o
-       372         56          0          0          0       2804   roboarm.o
-       420         30          0         18          0       4190   roboarmctrl.o
-        36          8        236          0       1024        876   startup_stm32f103xb.o
-       120         16          0          4          0       3494   stm32f1xx_hal.o
-       242         16          0          0          0      26633   stm32f1xx_hal_cortex.o
-       498         12          0          0          0       2980   stm32f1xx_hal_gpio.o
-        44          4          0          0          0        798   stm32f1xx_hal_msp.o
-      3552         82         16          0          0       7324   stm32f1xx_hal_rcc.o
-      2496         28          0          0          0      22465   stm32f1xx_hal_tim.o
-       106          0          0          0          0       2242   stm32f1xx_hal_tim_ex.o
-       928          4          0          0          0       5789   stm32f1xx_hal_uart.o
-        62         24          0          0          0       3764   stm32f1xx_it.o
-        72         12          0          4          0       1293   system_stm32f1xx.o
-      1712        104          0         44        260       6590   tim.o
-       244         32          0         10        316       2605   usart.o
+       304         32          0          8          0       1914   cart.o
+       112         14          0          0          0     248499   gpio.o
+       304         32          0          0         20       2559   main.o
+       372         56          0          0          0       2824   roboarm.o
+       420         30          0         18          0       4230   roboarmctrl.o
+        36          8        236          0       1024        880   startup_stm32f103xb.o
+       120         16          0          4          0       3534   stm32f1xx_hal.o
+       242         16          0          0          0      26665   stm32f1xx_hal_cortex.o
+       498         12          0          0          0       2992   stm32f1xx_hal_gpio.o
+        44          4          0          0          0        806   stm32f1xx_hal_msp.o
+      3552         82         16          0          0       7392   stm32f1xx_hal_rcc.o
+      2496         28          0          0          0      22873   stm32f1xx_hal_tim.o
+       106          0          0          0          0       2306   stm32f1xx_hal_tim_ex.o
+       928          4          0          0          0       5905   stm32f1xx_hal_uart.o
+        62         24          0          0          0       3788   stm32f1xx_it.o
+        72         12          0          4          0       1305   system_stm32f1xx.o
+      1712        104          0         44        260       6654   tim.o
+       244         32          0         10        316       2653   usart.o
 
     ----------------------------------------------------------------------
-     11642        506        284         92       1620     346715   Object Totals
+     11642        506        284         92       1620     347779   Object Totals
          0          0         32          0          0          0   (incl. Generated)
         18          0          0          4          0          0   (incl. Padding)
 
@@ -1540,8 +1540,8 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     13052        522        284         92       1620     342495   Grand Totals
-     13052        522        284         92       1620     342495   ELF Image Totals
+     13052        522        284         92       1620     343559   Grand Totals
+     13052        522        284         92       1620     343559   ELF Image Totals
      13052        522        284         92          0          0   ROM Totals
 
 ==============================================================================

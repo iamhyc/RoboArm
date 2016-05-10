@@ -1,6 +1,6 @@
 ..\output\cart.o: ..\Src\Cart.c
 ..\output\cart.o: ../Inc/Cart.h
-..\output\cart.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+..\output\cart.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 ..\output\cart.o: ../Inc/tim.h
 ..\output\cart.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h
 ..\output\cart.o: ../Inc/stm32f1xx_hal_conf.h
@@ -15,7 +15,7 @@
 ..\output\cart.o: ../Drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h
 ..\output\cart.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h
 ..\output\cart.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-..\output\cart.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\output\cart.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 ..\output\cart.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc_ex.h
 ..\output\cart.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h
 ..\output\cart.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio_ex.h

@@ -8,13 +8,13 @@
 ..\output\gpio.o: ../Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f1xx.h
 ..\output\gpio.o: ../Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h
 ..\output\gpio.o: ../Drivers/CMSIS/Include/core_cm3.h
-..\output\gpio.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+..\output\gpio.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 ..\output\gpio.o: ../Drivers/CMSIS/Include/core_cmInstr.h
 ..\output\gpio.o: ../Drivers/CMSIS/Include/core_cmFunc.h
 ..\output\gpio.o: ../Drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h
 ..\output\gpio.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h
 ..\output\gpio.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-..\output\gpio.o: e:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\output\gpio.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 ..\output\gpio.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc_ex.h
 ..\output\gpio.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h
 ..\output\gpio.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio_ex.h
